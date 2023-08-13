@@ -1,12 +1,13 @@
 import userModel from "../models/userModel.js";
 import orderModel from "../models/orderModel.js";
+import sellerModel from "../models/sellerModel.js";
 import admin from "firebase-admin";
 import { comparePassword, hashPassword } from "./../helpers/authHelper.js";
 import JWT from "jsonwebtoken";
 
 export const registerController = async (req, res) => {
   try {
-    const { name, email, password, phone, address, answer } = req.body;
+    const { name, email, password, phone, address, answer, isSeller, imgUrl } = req.body;
     //validations
     if (!name) {
       return res.send({ error: "Name is Required" });
@@ -45,9 +46,19 @@ export const registerController = async (req, res) => {
       address,
       password: hashedPassword,
       answer,
+      isSeller,
+      imgUrl,
     }).save();
-
-    res.status(201).send({
+    if(isSeller == 1) {
+      const seller = await new sellerModel({
+        userId: user._id,
+        name,
+        email,
+        phone,
+        address,
+      }).save();
+    }
+    res.status(200).send({
       success: true,
       message: "User Register Successfully",
       user,
@@ -101,7 +112,8 @@ export const loginController = async (req, res) => {
         email: user.email,
         phone: user.phone,
         address: user.address,
-        role: user.role,
+        isSeller: user.isSeller,
+        imgUrl: user.imgUrl,
       },
       token,
     });

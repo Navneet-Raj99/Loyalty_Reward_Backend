@@ -69,9 +69,9 @@ const productSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    photo: {
-      data: Buffer,
-      contentType: String,
+    imgUrl: {
+      type: String,
+      required: true,
     },
     shipping: {
       type: Boolean,

@@ -28,10 +28,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    role: {
+    isSeller: {
       type: Number,
       default: 0,
     },
+    imgUrl: {
+      type: String,
+      default: 'https://flipkarbucket.s3.ap-south-1.amazonaws.com/users/default-avatar.png'
+    }
   },
   { timestamps: true }
 );
