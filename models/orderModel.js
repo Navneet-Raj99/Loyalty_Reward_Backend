@@ -18,11 +18,15 @@ const orderSchema = new mongoose.Schema(
       default: "undone",
       enum: ["done", "undone"],
     },
-
+    pickupTime: {
+      type: Date, // Timestamp for when the rider takes the bike
+    },
+    returnTime: {
+      type: Date, // Timestamp for when the rider returns the bike
+    },
     addr:{
       type:String
     },
-
     nftTokenValue: {
       type: Number,
       required: true
