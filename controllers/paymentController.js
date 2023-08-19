@@ -5,7 +5,9 @@ import Razorpay from "razorpay";
 import { log } from "console";
 import orderModel from "../models/orderModel.js";
 import _ from "lodash";
-import {hashAmount, compareAmount} from "../helpers/tokenHelper.js"
+import {hashAmount, compareAmount} from "../helpers/tokenHelper.js";
+import userSellerModel  from "../models/userSellerSum.js";
+import { user } from "firebase-functions/v1/auth";
 // dotenv.config();
 
 export const instance = new Razorpay({
@@ -62,17 +64,61 @@ export const paymentVerification = async (req, res) => {
     cart.map((e) => {
       totalAmountPayable+=e.price;
     });
-    const nftTokenValue = await hashAmount(_.toString(totalAmountPayable));
-    const order = new orderModel({
+    // const nftTokenValue = await hashAmount(_.toString(totalAmountPayable));
+    const order = await orderModel.create({
       products: cart,
       payment: req.body,
       buyer: req.user._id,
-      nftTokenValue
-    }).save();
-
+      nftTokenValue : totalAmountPayable*0.1
+    });
+    const sellerIdCostMap = {};
+    cart.map((c) => {
+      sellerIdCostMap[c.sellerId] = 0;
+    })
+    cart.map((c) => {
+      sellerIdCostMap[c.sellerId]+=c.price;
+    })
+    const sellerIdCostArray = Object.entries(sellerIdCostMap).map(([id, amount]) => ({sellerId: id, amount}));
+    const userSellerPromises = sellerIdCostArray.map((e) => {
+      return userSellerModel.findOne({
+        userId: req.user._id,
+        sellerId: e.sellerId
+      });
+    })
+    let updateorCreatePromises;
+    await Promise.all(userSellerPromises).then((res) => {
+      updateorCreatePromises = res.map((r, index) => {
+        if(!_.isNull(r)){
+          return userSellerModel.findOneAndUpdate({
+            userId: req.user._id,
+            sellerId: sellerIdCostArray[index].sellerId
+          }, {
+            amount: r.amount + sellerIdCostArray[index].amount
+          })
+        } else {
+          return userSellerModel.create({
+            userId: req.user._id,
+            sellerId: sellerIdCostArray[index].sellerId,
+            amount: sellerIdCostArray[index].amount
+          })
+        }
+      })
+    }).catch((err) => {
+      console.log(err);
+    })
+    await Promise.all(updateorCreatePromises).then(() => {
+      console.log("successfully updated users and sum models");
+    }).catch((err) => {
+      console.log(err);
+    })
     // res.redirect(
     //   `http://localhost:3000/paymentsuccess?reference=${razorpay_payment_id}`
     // );
+    await orderModel.findByIdAndUpdate({
+      _id: _.toString(order._id)
+    }, {
+      status: "done"
+    })
     res.json({
       success: true,
     });
