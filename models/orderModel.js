@@ -24,10 +24,17 @@ const orderSchema = new mongoose.Schema(
     returnTime: {
       type: Date, // Timestamp for when the rider returns the bike
     },
+    addr:{
+      type:String
+    },
     nftTokenValue: {
       type: Number,
       required: true
+    },
+    tokenTransID:{
+      type: String
     }
+    
   },
   { timestamps: true }
 );
