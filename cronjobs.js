@@ -1,5 +1,6 @@
 const cron = require('node-cron');
 const orders = require('./models/orderModel');
+const userSellerCollection = require('./models/userSellerSum')
 const { issueNFT } = require('./helpers/contractHelper');
 const { IMAGE_CONSTANTS, TOKEN_TYPE_MAPPING } = require('./constants');
 
@@ -35,12 +36,9 @@ const generateSELLERCUSTOMERToken = async () => {
         try {
             const filterObj = {
 
-                status: "done",
-                payment: {
-                    razorpay_order_id: { $exists: true },
-                    razorpay_payment_id: { $exists: true },
-                    razorpay_signature: { $exists: true }
-                },
+                sellerId:{ $exists: true },
+                userId:{ $exists: true },
+                amount:{ $exists: true },
                 tokenTransID: { $exists: false }
 
             }
