@@ -4,7 +4,8 @@ import { Payment } from "../models/paymentModel.js";
 import Razorpay from "razorpay";
 import { log } from "console";
 import orderModel from "../models/orderModel.js";
-
+import _ from "lodash";
+import {hashAmount, compareAmount} from "../helpers/tokenHelper.js"
 // dotenv.config();
 
 export const instance = new Razorpay({
@@ -33,7 +34,8 @@ export const checkout = async (req, res) => {
 };
 
 export const paymentVerification = async (req, res) => {
-  console.log("payvaavduavdu", req.body);
+  try {
+    console.log("payvaavduavdu", req.body);
   const { razorpay_order_id, razorpay_payment_id, razorpay_signature, cart } =
     req.body;
 
@@ -56,10 +58,16 @@ export const paymentVerification = async (req, res) => {
       razorpay_payment_id,
       razorpay_signature,
     });
+    let totalAmountPayable = 0;
+    cart.map((e) => {
+      totalAmountPayable+=e.price;
+    });
+    const nftTokenValue = await hashAmount(_.toString(totalAmountPayable));
     const order = new orderModel({
       products: cart,
       payment: req.body,
       buyer: req.user._id,
+      nftTokenValue
     }).save();
 
     // res.redirect(
@@ -72,5 +80,8 @@ export const paymentVerification = async (req, res) => {
     res.status(400).json({
       success: false,
     });
+  }
+  } catch (err) {
+    console.log(err);
   }
 };
