@@ -10,7 +10,7 @@ dotenv.config();
 
 export const createProductController = async (req, res) => {
   try {
-    const { name, description, price, category, quantity, shipping, imgUrl } =
+    const { name, description, price, category, quantity, shipping, imgUrl, sellerId } =
       req.fields;
     const { photo } = req.files;
     //alidation
@@ -27,6 +27,8 @@ export const createProductController = async (req, res) => {
         return res.status(500).send({ error: "Quantity is Required" });
       case !imgUrl:
         return res.status(500).send({ error: "Image Url is Required"});
+      case !sellerId:
+        return res.status(500).send({ error:"Seller Id is Required"});
       case photo && photo.size > 1000000:
         return res
           .status(500)
@@ -57,7 +59,6 @@ export const getProductController = async (req, res) => {
       .find({})
       .populate("category")
       .select("-photo")
-      .limit(12)
       .sort({ createdAt: -1 });
     res.status(200).send({
       success: true,
@@ -134,7 +135,7 @@ export const deleteProductController = async (req, res) => {
 //upate producta
 export const updateProductController = async (req, res) => {
   try {
-    const { name, description, price, category, quantity, shipping, imgUrl} =
+    const { name, description, price, category, quantity, shipping, imgUrl, sellerId} =
       req.fields;
     const { photo } = req.files;
     //alidation
@@ -151,6 +152,8 @@ export const updateProductController = async (req, res) => {
         return res.status(500).send({ error: "Quantity is Required" });
       case !imgUrl:
          return res.status(500).send({error: "Image Url is Required"});
+      case !sellerId:
+        return res.status(500).send({ error:"Seller Id is Required"});
       case photo && photo.size > 1000000:
         return res
           .status(500)
