@@ -62,12 +62,12 @@ export const paymentVerification = async (req, res) => {
     cart.map((e) => {
       totalAmountPayable+=e.price;
     });
-    const nftTokenValue = await hashAmount(_.toString(totalAmountPayable));
+    // const nftTokenValue = await hashAmount(_.toString(totalAmountPayable));
     const order = new orderModel({
       products: cart,
       payment: req.body,
       buyer: req.user._id,
-      nftTokenValue
+      nftTokenValue: totalAmountPayable*0.1
     }).save();
 
     // res.redirect(
