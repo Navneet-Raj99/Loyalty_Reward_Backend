@@ -4,6 +4,7 @@ import sellerModel from "../models/sellerModel.js";
 import admin from "firebase-admin";
 import { comparePassword, hashPassword } from "./../helpers/authHelper.js";
 import JWT from "jsonwebtoken";
+import _ from 'lodash'
 
 export const registerController = async (req, res) => {
   try {
@@ -103,20 +104,42 @@ export const loginController = async (req, res) => {
     const token = await JWT.sign({ _id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
-    res.status(200).send({
-      success: true,
-      message: "login successfully",
-      user: {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        phone: user.phone,
-        address: user.address,
-        isSeller: user.isSeller,
-        imgUrl: user.imgUrl,
-      },
-      token,
-    });
+    if(user.isSeller) {
+      const sellerAccDetails = await sellerModel.findOne({userId: user._id});
+      if(!_.isEmpty(sellerAccDetails)) {
+        user.sellerId = sellerAccDetails._id;
+        res.status(200).send({
+          success: true,
+          message: "login successfully",
+          user:{
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            address: user.address,
+            isSeller: user.isSeller,
+            imgUrl: user.imgUrl,
+            sellerId: user.sellerId
+          },
+          token,
+        });
+      }
+    } else {
+      res.status(200).send({
+        success: true,
+        message: "login successfully",
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          address: user.address,
+          isSeller: user.isSeller,
+          imgUrl: user.imgUrl,
+        },
+        token,
+      });
+    }
   } catch (error) {
     console.log(error);
     res.status(500).send({
