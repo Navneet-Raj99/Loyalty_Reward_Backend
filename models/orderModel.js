@@ -19,6 +19,9 @@ const orderSchema = new mongoose.Schema(
       enum: ["done", "undone"],
     },
 
+    addr:{
+      type:String
+    },
 
     nftTokenValue: {
       type: Number,
