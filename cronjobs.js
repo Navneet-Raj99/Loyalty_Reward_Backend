@@ -75,3 +75,5 @@ const generateREFERALToken = async () => {
     })
     task.start()
 }
+
+module.exports={generatePURCHASEToken}

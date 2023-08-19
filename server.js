@@ -13,6 +13,7 @@ import { fileURLToPath } from "url";
 import DecisionTree from "decision-tree";
 import paymentRoute from "./routes/paymentRoutes.js";
 import Razorpay from "razorpay";
+import { generatePURCHASEToken } from "./cronjobs.js";
 const app = express();
 dotenv.config();
 app.use(bodyParser.json({ limit: "10mb" }));
@@ -62,3 +63,4 @@ app.listen(PORT, () => {
 
 //Calling Scedulers
 
+// generatePURCHASEToken();
