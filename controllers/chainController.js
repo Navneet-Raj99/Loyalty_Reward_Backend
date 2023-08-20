@@ -1,4 +1,4 @@
-import { getNFTDataByWallet, getNFTDataByWalletExp, unSigningAddress } from "../helpers/contractHelper.js";
+import { expireNFT, getNFTDataByWallet, getNFTDataByWalletExp, unSigningAddress } from "../helpers/contractHelper.js";
 import userReferralModel from "../models/userReferral.js";
 import _ from "lodash";
 
@@ -71,6 +71,24 @@ export const getNftByWalletEXP = async (req,res) =>
     } catch (error) {
         console.log(error);
         res.status(500).send({success: false, message: err});
+    }
+   
+
+}
+
+export const expireToken = async (req,res) =>
+{
+    try {
+        const {signature, address, tokenId} = req.body;
+        let authorized = unSigningAddress(address, signature);
+        if(authorized){
+            let expired=await expireNFT(tokenId,address);
+            res.status(200).send({success: expired});
+        }
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({success: false});
     }
    
 

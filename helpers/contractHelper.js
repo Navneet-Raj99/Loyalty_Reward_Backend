@@ -89,9 +89,11 @@ export async function expireNFT(tokenID, wallet) {
         const signer = provider.getSigner();
         const contractWithSigner = contract.connect(signer);
         await contractWithSigner.expireNFT(tokenID, wallet);
+        return true;
 
     } catch (error) {
         console.log(error);
+        return false;
     }
 
 
