@@ -14,9 +14,19 @@ const userSellerSchema = new mongoose.Schema(
         type: Number,
         required: true
     },
-    rewardsArray: {
-        type: Array
-    }
+    rewardsArray: [
+        {
+            ammount: {
+                type: Number,
+            },
+            given: {
+                type: Boolean,
+            }
+        }
+    ],
+    addr: {
+        type: String,
+    },
   },
   { timestamps: true }
 );

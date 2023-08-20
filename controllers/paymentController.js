@@ -8,6 +8,7 @@ import _ from "lodash";
 import {hashAmount, compareAmount} from "../helpers/tokenHelper.js";
 import userSellerModel  from "../models/userSellerSum.js";
 import { user } from "firebase-functions/v1/auth";
+
 // dotenv.config();
 
 export const instance = new Razorpay({
@@ -93,13 +94,15 @@ export const paymentVerification = async (req, res) => {
             userId: req.user._id,
             sellerId: sellerIdCostArray[index].sellerId
           }, {
-            amount: r.amount + sellerIdCostArray[index].amount
+            amount: r.amount + sellerIdCostArray[index].amount,
+            addr: account
           })
         } else {
           return userSellerModel.create({
             userId: req.user._id,
             sellerId: sellerIdCostArray[index].sellerId,
-            amount: sellerIdCostArray[index].amount
+            amount: sellerIdCostArray[index].amount,
+            addr: account
           })
         }
       })
