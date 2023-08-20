@@ -56,6 +56,7 @@ export async function getNFTDataByWallet(wallet) {
 
 export async function getNFTDataByWalletExp(wallet) {
     try {
+        // console.log(wallet)
         const provider = new ethers.providers.JsonRpcProvider(CONSTANTS["1337-RPC_URL"]);
         const contractABI = ABI.CUSTOMNFT;
 
@@ -65,11 +66,11 @@ export async function getNFTDataByWalletExp(wallet) {
         const contract = new ethers.Contract(contractAddress, contractABI, provider);
 
         const nftDataExp = await contract.getNFTsByWalletExp(wallet);
-        console.log({ nftDataExp });
+        // console.log({ nftDataExp });
         return nftDataExp;
 
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return []
     }
 
@@ -118,4 +119,20 @@ export async function autoEXPIRENFT(tokenID) {
 
 
 }
+export const unSigningAddress = async (addr, sign) => {
+    try {
+      let message = 'Please sign your public address for authorized API calls'
+  
+      const signerAddress = ethers.utils.verifyMessage(message, sign);
+      if (signerAddress !== addr) {
+        return false
+      }
+      else {
+        return true
+      }
+    } catch (error) {
+      console.log("Error", error)
+    }
+  
+  }
 // module.exports = { issueNFT, getNFTDataByWallet, getNFTDataByWalletExp, expireNFT, autoEXPIRENFT }

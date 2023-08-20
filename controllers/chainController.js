@@ -1,3 +1,4 @@
+import { getNFTDataByWallet, getNFTDataByWalletExp, unSigningAddress } from "../helpers/contractHelper.js";
 import userReferralModel from "../models/userReferral.js";
 import _ from "lodash";
 
@@ -39,4 +40,38 @@ export const setAddr = async (req, res ) =>
         console.log(err);
         res.status(500).send({success: false, message: err});
     }
+}
+export const getNftByWallet = async (req,res) =>
+{
+    try {
+        const {signature, address} = req.body;
+        let authorized = unSigningAddress(address, signature);
+        if(authorized){
+            let NFTDataArray=await getNFTDataByWallet(address);
+            res.status(200).send({success: true, array: NFTDataArray});
+        }
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({success: false, message: err});
+    }
+   
+
+}
+export const getNftByWalletEXP = async (req,res) =>
+{
+    try {
+        const {signature, address} = req.body;
+        let authorized = unSigningAddress(address, signature);
+        if(authorized){
+            let NFTDataArrayEXP=await getNFTDataByWalletExp(address);
+            res.status(200).send({success: true, array: NFTDataArrayEXP});
+        }
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({success: false, message: err});
+    }
+   
+
 }
