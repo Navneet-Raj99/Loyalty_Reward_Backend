@@ -1,4 +1,4 @@
- const ABI = {
+ export const ABI = {
     CUSTOMNFT: [
         {
             "inputs": [
@@ -632,4 +632,3 @@
         }
     ]
 }
-module.exports={ABI}
