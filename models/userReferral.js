@@ -19,6 +19,12 @@ const userReferralSchema = new mongoose.Schema(
     awarded:{
         type: Boolean,
         required: true
+    },
+    senderAddr:{
+      type:String
+    },
+    receiverAddr :{
+      type :String
     }
   },
   { timestamps: true }
