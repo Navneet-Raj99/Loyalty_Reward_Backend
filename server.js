@@ -14,7 +14,8 @@ import { fileURLToPath } from "url";
 import DecisionTree from "decision-tree";
 import paymentRoute from "./routes/paymentRoutes.js";
 import Razorpay from "razorpay";
-// const generatePURCHASEToken= require('./cronjobs.js')
+import chainRoutes from "./routes/chainRoutes.js";
+
 // import { generatePURCHASEToken } from "./cronjobs.js";
 import  {generatePURCHASEToken, generateSELLERCUSTOMERToken}  from "./cronjobs.js";
 const app = express();
@@ -44,7 +45,7 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/category", categoryRoutes);
 app.use("/api/v1/product", productRoutes);
 app.use("/api/v1/payment", paymentRoute);
-app.use("/api/v1/chain", paymentRoute);
+app.use("/api/v1/chain",chainRoutes)
 app.get("/api/getkey", (req, res) =>
   res.status(200).json({ key: process.env.RAZORPAY_API_KEY })
 );
