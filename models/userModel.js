@@ -35,6 +35,9 @@ const userSchema = new mongoose.Schema(
     imgUrl: {
       type: String,
       default: 'https://flipkarbucket.s3.ap-south-1.amazonaws.com/users/default-avatar.png'
+    },
+    refCode: {
+      type: String
     }
   },
   { timestamps: true }

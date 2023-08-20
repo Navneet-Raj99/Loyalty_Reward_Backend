@@ -5,6 +5,7 @@ import admin from "firebase-admin";
 import { comparePassword, hashPassword } from "./../helpers/authHelper.js";
 import JWT from "jsonwebtoken";
 import _ from 'lodash'
+import referralCodes from "referral-codes";
 
 export const registerController = async (req, res) => {
   try {
@@ -25,7 +26,7 @@ export const registerController = async (req, res) => {
     if (!address) {
       return res.send({ message: "Address is Required" });
     }
-    if (!answer) {
+    if (!answer) {  
       return res.send({ message: "Answer is Required" });
     }
     //check user
@@ -40,6 +41,10 @@ export const registerController = async (req, res) => {
     //register user
     const hashedPassword = await hashPassword(password);
     //save
+    const randomGeneratedReferralCode = referralCodes.generate({
+      length: 8,
+      count: 1,
+    });;
     const user = await new userModel({
       name,
       email,
@@ -49,6 +54,7 @@ export const registerController = async (req, res) => {
       answer,
       isSeller,
       imgUrl,
+      refCode: randomGeneratedReferralCode[0]
     }).save();
     if(isSeller == 1) {
       const seller = await new sellerModel({

@@ -38,6 +38,7 @@
     "nodemon": "^2.0.20",
     "razorpay": "^2.9.1",
     "react-icons": "^4.7.1",
+    "referral-codes": "^2.0.3",
     "slugify": "^1.6.5"
   }
 }
