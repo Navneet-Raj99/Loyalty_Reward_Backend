@@ -25,6 +25,17 @@ const userReferralSchema = new mongoose.Schema(
     },
     receiverAddr :{
       type :String
+    },
+    sendertokenTransID:{
+      type: String
+    },
+    receivertokenTransID :{
+      type:String
+    },
+    nftTokenValue :{
+      type :Number,
+      default:200,
+      required: true
     }
   },
   { timestamps: true }

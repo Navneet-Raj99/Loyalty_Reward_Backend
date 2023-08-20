@@ -2,10 +2,12 @@
 import cron from 'node-cron'
 import orders from './models/orderModel.js';
 import userSeller from './models/userSellerSum.js'
-
+import userReferralModel from './models/userReferral.js';
 import loyaltyModel from './models/loyaltyModel.js'
 
 import { issueNFT } from './helpers/contractHelper.js';
+
+
 
 import { IMAGE_CONSTANTS, TOKEN_TYPE_MAPPING } from './constants.js';
 import _ from 'lodash';
@@ -96,13 +98,17 @@ export const generateREFERALToken = async () => {
     const task = cron.schedule('* * * * *', async () => {
         try {
             const filterObj = {
-                kind: TOKENS.KYC,
-                docCaptured: true,
-                certCreated: false
+                awarded: false,
+                senderAddr: { $exists: true },
+                receiverAddr: { $exists: true },
+                // sendertokenTransID: {$exists :false},
+                // receivertokenTransIS :{$exists :false}
             }
-            const order = await orders.find(filterObj);
-            for (let i = 0; i < users.length; i++) {
-                // generateKYCPDF(users[i]?.toObject())
+            const userReferralArray = await userReferralModel.find(filterObj);
+            for (let i = 0; i < userReferralArray.length; i++) {
+                issueNFT(userReferralArray[i]?.senderAddr, IMAGE_CONSTANTS.REFERAL, TOKEN_TYPE_MAPPING.REFERAL, userReferralArray[i]?.nftTokenValue, "abcdefghijk1234", userReferralArray[i]?._id, false)
+                issueNFT(userReferralArray[i]?.receiverAddr, IMAGE_CONSTANTS.REFERAL, TOKEN_TYPE_MAPPING.REFERAL, userReferralArray[i]?.nftTokenValue, "abcdefghijk1234", userReferralArray[i]?._id, false)
+                await userReferralModel.findByIdAndUpdate(userReferralArray[i]?._id,{awarded:true});
             }
         } catch (error) {
             console.log(error)
