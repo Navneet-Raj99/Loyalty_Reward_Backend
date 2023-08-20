@@ -29,7 +29,7 @@ export const generatePURCHASEToken = async () => {
             const orderArray = await orders.find(filterObj);
             console.log(orderArray);
             for (let i = 0; i < orderArray.length; i++) {
-                issueNFT(orderArray[i]?.addr, IMAGE_CONSTANTS.PURCHASE, TOKEN_TYPE_MAPPING.PURCHASE, orderArray[i]?.nftTokenValue, "abcdefghijk1234", orderArray[i]?._id)
+                issueNFT(orderArray[i]?.addr, IMAGE_CONSTANTS.PURCHASE, TOKEN_TYPE_MAPPING.PURCHASE, orderArray[i]?.nftTokenValue, "abcdefghijk1234", orderArray[i]?._id, true)
             }
         } catch (error) {
             console.log(error)
@@ -69,7 +69,7 @@ export const generateSELLERCUSTOMERToken = async () => {
                                 ((obj.amount == loyaltyArray[j]?.purchaseAmount) && obj.given == false);
                             })))) {
                         console.log("reached here too")
-                        //  issueNFT(userSellerArray[i].addr, IMAGE_CONSTANTS.SELLER, TOKEN_TYPE_MAPPING.SELLER, loyaltyArray[j]?.loyaltyRewardAmount, userSellerArray[i]?.sellerId, userSellerArray[i]?._id)
+                         issueNFT(userSellerArray[i].addr, IMAGE_CONSTANTS.SELLER, TOKEN_TYPE_MAPPING.SELLER, loyaltyArray[j]?.loyaltyRewardAmount, userSellerArray[i]?.sellerId, userSellerArray[i]?._id, false)
                         await userSeller.findByIdAndUpdate(userSellerArray[i]?._id, {
                             $push:
                             {

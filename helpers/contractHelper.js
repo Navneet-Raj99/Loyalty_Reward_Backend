@@ -5,7 +5,7 @@ import { ABI } from '../contracts/abis/customNFT.js'
 import orders from '../models/orderModel.js';
 // const { ABI } = require("../contracts/abis/customNFT");
 
-export async function issueNFT(wallet, imageUrl, nftType, value, sellerId, order_id) {
+export async function issueNFT(wallet, imageUrl, nftType, value, sellerId, order_id, source) {
     try {
         console.log("entered");
 
@@ -23,7 +23,7 @@ export async function issueNFT(wallet, imageUrl, nftType, value, sellerId, order
         const tx = await contractWithSigner.issueNFT(wallet, imageUrl, nftType, value, sellerId, { gasLimit });
         console.log(tx?.hash);
 
-        await orders.findOneAndUpdate({_id:order_id},{tokenTransID:tx?.hash})
+       source && await orders.findOneAndUpdate({_id:order_id},{tokenTransID:tx?.hash})
 
     } catch (error) {
         console.log(error)
