@@ -16,7 +16,7 @@ import paymentRoute from "./routes/paymentRoutes.js";
 import Razorpay from "razorpay";
 // const generatePURCHASEToken= require('./cronjobs.js')
 // import { generatePURCHASEToken } from "./cronjobs.js";
-import  generatePURCHASEToken  from "./cronjobs.js";
+import  {generatePURCHASEToken}  from "./cronjobs.js";
 const app = express();
 dotenv.config();
 app.use(bodyParser.json({ limit: "10mb" }));

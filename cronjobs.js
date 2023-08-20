@@ -6,7 +6,7 @@ import { issueNFT } from './helpers/contractHelper.js';
 
 import { IMAGE_CONSTANTS,TOKEN_TYPE_MAPPING } from './constants.js';
 
-const generatePURCHASEToken = async () => {
+export const generatePURCHASEToken = async () => {
     console.log("Started process for Generating PURCHASETOKEN")
     const task = cron.schedule('* * * * *', async () => {
         try {
@@ -32,7 +32,7 @@ const generatePURCHASEToken = async () => {
     task.start()
 }
 
-const generateSELLERCUSTOMERToken = async () => {
+export const generateSELLERCUSTOMERToken = async () => {
     console.log("Started process for Generating SELLERCUSTOMER Token")
     const task = cron.schedule('* * * * *', async () => {
         try {
@@ -56,7 +56,7 @@ const generateSELLERCUSTOMERToken = async () => {
 }
 
 
-const generateREFERALToken = async () => {
+export const generateREFERALToken = async () => {
     console.log("Started process for Generating REFERAL Token")
     const task = cron.schedule('* * * * *', async () => {
         try {
@@ -76,4 +76,4 @@ const generateREFERALToken = async () => {
     task.start()
 }
 
-export default generatePURCHASEToken;
+// export default generatePURCHASEToken;
