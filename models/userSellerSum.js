@@ -12,21 +12,25 @@ const userSellerSchema = new mongoose.Schema(
     },
     amount: {
         type: Number,
-        required: true
+        required: true,
+        default: 0
     },
     rewardsArray: [
         {
-            ammount: {
+            amount: {
                 type: Number,
             },
             given: {
-                type: Boolean,
+                type: Boolean
             }
         }
     ],
     addr: {
         type: String,
     },
+    tokenTransID:{
+        type: String
+      }
   },
   { timestamps: true }
 );

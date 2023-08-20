@@ -1,10 +1,14 @@
 // const cron = require('node-cron');
 import cron from 'node-cron'
 import orders from './models/orderModel.js';
+import userSeller from './models/userSellerSum.js'
+
+import loyaltyModel from './models/loyaltyModel.js'
 
 import { issueNFT } from './helpers/contractHelper.js';
 
-import { IMAGE_CONSTANTS,TOKEN_TYPE_MAPPING } from './constants.js';
+import { IMAGE_CONSTANTS, TOKEN_TYPE_MAPPING } from './constants.js';
+import _ from 'lodash';
 
 export const generatePURCHASEToken = async () => {
     console.log("Started process for Generating PURCHASETOKEN")
@@ -17,7 +21,8 @@ export const generatePURCHASEToken = async () => {
                 'payment.razorpay_payment_id': { $exists: true },
                 'payment.razorpay_signature': { $exists: true },
                 tokenTransID: { $exists: false },
-                nftTokenValue: { $exists: true }
+                nftTokenValue: { $exists: true },
+                addr: { $exists: true }
 
             }
             const orderArray = await orders.find(filterObj);
@@ -36,17 +41,35 @@ export const generateSELLERCUSTOMERToken = async () => {
     console.log("Started process for Generating SELLERCUSTOMER Token")
     const task = cron.schedule('* * * * *', async () => {
         try {
+
             const filterObj = {
 
-                sellerId:{ $exists: true },
-                userId:{ $exists: true },
-                amount:{ $exists: true },
-                tokenTransID: { $exists: false }
+                sellerId: { $exists: true },
+                userId: { $exists: true },
+                amount: { $exists: true },
+                // tokenTransID: { $exists: false },
+                addr: { $exists: true }
 
             }
-            const orderArray = await orders.find(filterObj);
-            for (let i = 0; i < orderArray.length; i++) {
-                issueNFT(orderArray[i].addr, IMAGE_CONSTANTS.SELLER, TOKEN_TYPE_MAPPING.SELLER, orderArray[i]?.nftTokenValue, "123")
+            const userSellerArray = await userSeller.find(filterObj);
+            const loyaltyArray = await loyaltyModel.find();
+            console.log("reached here")
+            for (let i = 0; i < userSellerArray.length; i++) {
+                for (let j = 0; j < loyaltyArray.length; j++) {
+                    // let userSellerDetail = await userSeller.find
+                    if (userSellerArray[i]?.amount >= loyaltyArray[j]?.purchaseAmount &&
+                         (!(userSellerArray[i].rewardsArray)) ) {
+                         console.log("reached here too")
+                        //  issueNFT(userSellerArray[i].addr, IMAGE_CONSTANTS.SELLER, TOKEN_TYPE_MAPPING.SELLER, loyaltyArray[j]?.loyaltyRewardAmount, userSellerArray[i]?.sellerId, userSellerArray[i]?._id)
+                         await userSeller.findByIdAndUpdate(userSellerArray[i]?._id, {
+                            rewardsArray:[...userSellerArray[i].rewardsArray, {
+                               amount:loyaltyArray[j]?.purchaseAmount,
+                               given:true
+                            }]
+                        })
+
+                    }
+                }
             }
         } catch (error) {
             console.log(error)
