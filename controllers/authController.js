@@ -125,7 +125,8 @@ export const loginController = async (req, res) => {
             address: user.address,
             isSeller: user.isSeller,
             imgUrl: user.imgUrl,
-            sellerId: user.sellerId
+            sellerId: user.sellerId,
+            refCode: user.refCode,
           },
           token,
         });
@@ -142,6 +143,7 @@ export const loginController = async (req, res) => {
           address: user.address,
           isSeller: user.isSeller,
           imgUrl: user.imgUrl,
+          refCode: user.refCode
         },
         token,
       });
