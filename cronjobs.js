@@ -56,16 +56,43 @@ export const generateSELLERCUSTOMERToken = async () => {
             console.log("reached here")
             for (let i = 0; i < userSellerArray.length; i++) {
                 for (let j = 0; j < loyaltyArray.length; j++) {
-                    // let userSellerDetail = await userSeller.find
+                    if (userSellerArray[i]?.amount >= loyaltyArray[j]?.purchaseAmount) {
+                        console.log(_.isEmpty(userSellerArray[i].rewardsArray));
+                        console.log((userSellerArray[i].rewardsArray.some((obj) => {
+                            obj.amount != loyaltyArray[j]?.purchaseAmount
+                        })));
+                        console.log(userSellerArray[i].rewardsArray.some((obj) => {
+                            ((obj.amount == loyaltyArray[j]?.purchaseAmount) && obj.given == false);
+                        }));
+                    }
                     if (userSellerArray[i]?.amount >= loyaltyArray[j]?.purchaseAmount &&
-                         (!(userSellerArray[i].rewardsArray)) ) {
-                         console.log("reached here too")
+                        (_.isEmpty(userSellerArray[i].rewardsArray) ||
+                            (userSellerArray[i].rewardsArray.some((obj) => {
+                                obj.amount != loyaltyArray[j]?.purchaseAmount
+                            })) ||
+                            (userSellerArray[i].rewardsArray.some((obj) => {
+                                ((obj.amount == loyaltyArray[j]?.purchaseAmount) && obj.given == false);
+                            })))) {
+                        console.log("==============================");
+                        console.log(userSellerArray[i]?.amount >= loyaltyArray[j]?.purchaseAmount);
+                        console.log(_.isEmpty(userSellerArray[i].rewardsArray));
+                        console.log((userSellerArray[i].rewardsArray.some((obj) => {
+                            obj.amount != loyaltyArray[j]?.purchaseAmount
+                        })));
+                        console.log(userSellerArray[i].rewardsArray.some((obj) => {
+                            ((obj.amount == loyaltyArray[j]?.purchaseAmount) && obj.given == false);
+                        }));
+                        console.log("================================");
+                        console.log("reached here too")
                         //  issueNFT(userSellerArray[i].addr, IMAGE_CONSTANTS.SELLER, TOKEN_TYPE_MAPPING.SELLER, loyaltyArray[j]?.loyaltyRewardAmount, userSellerArray[i]?.sellerId, userSellerArray[i]?._id)
-                         await userSeller.findByIdAndUpdate(userSellerArray[i]?._id, {
-                            rewardsArray:[...userSellerArray[i].rewardsArray, {
-                               amount:loyaltyArray[j]?.purchaseAmount,
-                               given:true
-                            }]
+                        await userSeller.findByIdAndUpdate(userSellerArray[i]?._id, {
+                            $push:
+                            {
+                                rewardsArray: {
+                                    amount: loyaltyArray[j]?.purchaseAmount,
+                                    given: true
+                                }
+                            }
                         })
 
                     }
