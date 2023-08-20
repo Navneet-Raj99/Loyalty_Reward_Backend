@@ -44,7 +44,7 @@ export async function getNFTDataByWallet(wallet) {
 
 
         const nftData = await contract.getNFTsByWallet(wallet);
-        console.log({ nftData });
+        // console.log({ nftData });
         return nftData;
 
     } catch (error) {
@@ -100,7 +100,7 @@ export async function expireNFT(tokenID, wallet) {
 
 }
 
-export async function autoEXPIRENFT(tokenID) {
+export async function autoEXPIRENFT() {
     try {
         const provider = new ethers.providers.JsonRpcProvider(CONSTANTS["1337-RPC_URL"]);
         const contractABI = ABI.CUSTOMNFT;
@@ -112,7 +112,7 @@ export async function autoEXPIRENFT(tokenID) {
 
         const signer = provider.getSigner();
         const contractWithSigner = contract.connect(signer);
-        await contractWithSigner.autoExpireNFT(tokenID);
+        await contractWithSigner.autoExpireNFT();
 
     } catch (error) {
         console.log(error);
@@ -137,4 +137,28 @@ export const unSigningAddress = async (addr, sign) => {
     }
   
   }
+
+//   testing Code
+
+//   export const getAllmintedNFTSSpecific = async () =>
+//   {
+//     try {
+//         const provider = new ethers.providers.JsonRpcProvider(CONSTANTS["1337-RPC_URL"]);
+//         const contractABI = ABI.CUSTOMNFT;
+
+//         const contractAddress = CONSTANTS["1337-CUSTOMNFT"];
+
+
+//         const contract = new ethers.Contract(contractAddress, contractABI, provider);
+
+//         const signer = provider.getSigner();
+//         const contractWithSigner = contract.connect(signer);
+//         let allToken=await contractWithSigner.getAllMintedNFTs();
+//         return allToken;
+        
+//     } catch (error) {
+//         console.log(error);
+//         return [];
+//     }
+//   }
 // module.exports = { issueNFT, getNFTDataByWallet, getNFTDataByWalletExp, expireNFT, autoEXPIRENFT }

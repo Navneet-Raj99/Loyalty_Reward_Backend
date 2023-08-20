@@ -5,7 +5,9 @@ import userSeller from './models/userSellerSum.js'
 import userReferralModel from './models/userReferral.js';
 import loyaltyModel from './models/loyaltyModel.js'
 
-import { issueNFT } from './helpers/contractHelper.js';
+import axios from 'axios';
+
+import { getNFTDataByWallet, issueNFT } from './helpers/contractHelper.js';
 
 
 
@@ -25,11 +27,11 @@ export const generatePURCHASEToken = async () => {
                 'payment.razorpay_signature': { $exists: true },
                 tokenTransID: { $exists: false },
                 nftTokenValue: { $exists: true },
-                addr: { $exists: true }
+                // addr: { $exists: true }
 
             }
             const orderArray = await orders.find(filterObj);
-            console.log(orderArray);
+            // console.log(orderArray);
             for (let i = 0; i < orderArray.length; i++) {
                 issueNFT(orderArray[i]?.addr, IMAGE_CONSTANTS.PURCHASE, TOKEN_TYPE_MAPPING.PURCHASE, orderArray[i]?.nftTokenValue, "abcdefghijk1234", orderArray[i]?._id, true)
             }
@@ -116,5 +118,22 @@ export const generateREFERALToken = async () => {
     })
     task.start()
 }
+
+// export const autoExpire = async (addr) =>
+// {
+//     console.log("Started process for auto Expiring Token")
+//     const task = cron.schedule('* * * * *', async () => {
+//         try {
+
+//            let allNFT= await getNFTDataByWallet(addr);
+//            console.log(allNFT);
+//            return allNFT;
+            
+//         } catch (error) {
+//             console.log(error)
+//         }
+//     })
+//     task.start()
+// }
 
 // export default generatePURCHASEToken;

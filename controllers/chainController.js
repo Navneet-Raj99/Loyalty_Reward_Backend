@@ -81,6 +81,8 @@ export const expireToken = async (req,res) =>
     try {
         const {signature, address, tokenId} = req.body;
         let authorized = unSigningAddress(address, signature);
+
+        console.log(address, tokenId)
         if(authorized){
             let expired=await expireNFT(tokenId,address);
             res.status(200).send({success: expired});
@@ -93,3 +95,21 @@ export const expireToken = async (req,res) =>
    
 
 }
+
+// Testing Code
+
+// export const  getAllNFTswallet = async (req,res)=>
+// {
+//     try {
+//         const {signature, address, tokenId} = req.body;
+//         let authorized = unSigningAddress(address, signature);
+//         if(authorized){
+//             let allNFTs=await getAllNFTs();
+//             res.status(200).send({success: true, array:allNFTs});
+//         }
+        
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).send({success: false,array:[]});
+//     }
+// }

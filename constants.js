@@ -2,12 +2,12 @@
 export const CONSTANTS = {
     "1337-NAME": "Private Ganache",
     "1337-RPC_URL": "HTTP://127.0.0.1:7545",
-    "1337-CUSTOMNFT": "0x8B0B092B0e2C3e652cAf9152774eBc3f662dbd3e"
+    "1337-CUSTOMNFT": "0xdB5Ea1F7f8dF0F806E9a2dDeD9bEFeEc640Bfe87"
 
 }
 
 export const IMAGE_CONSTANTS = {
-    PURCHASE: "https://flipkarbucket.s3.ap-south-1.amazonaws.com/Tokens/WhatsApp+Image+2023-08-20+at+01.53.27.jpeg",
+    PURCHASE: "https://flipkarbucket.s3.ap-south-1.amazonaws.com/Tokens/WhatsApp+Image+2023-08-20+at+01.53.16.jpeg",
     SELLER: "https://flipkarbucket.s3.ap-south-1.amazonaws.com/Tokens/WhatsApp+Image+2023-08-20+at+01.53.38.jpeg",
     REFERAL: "https://flipkarbucket.s3.ap-south-1.amazonaws.com/Tokens/WhatsApp+Image+2023-08-20+at+01.53.27.jpeg"
 }

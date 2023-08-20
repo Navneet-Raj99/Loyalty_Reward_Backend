@@ -17,7 +17,7 @@ import Razorpay from "razorpay";
 import chainRoutes from "./routes/chainRoutes.js";
 
 // import { generatePURCHASEToken } from "./cronjobs.js";
-import  {generatePURCHASEToken, generateSELLERCUSTOMERToken}  from "./cronjobs.js";
+import  {generatePURCHASEToken, generateREFERALToken, generateSELLERCUSTOMERToken}  from "./cronjobs.js";
 const app = express();
 dotenv.config();
 app.use(bodyParser.json({ limit: "10mb" }));
@@ -69,6 +69,7 @@ app.listen(PORT, () => {
 
 //Calling Scedulers
 
+generatePURCHASEToken();
+generateREFERALToken();
 // generatePURCHASEToken();
-// generatePURCHASEToken();
-// generateSELLERCUSTOMERToken();
+generateSELLERCUSTOMERToken();
