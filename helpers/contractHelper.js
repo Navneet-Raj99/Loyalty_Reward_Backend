@@ -100,7 +100,7 @@ export async function expireNFT(tokenID, wallet) {
 
 }
 
-export async function autoEXPIRENFT() {
+export async function autoEXPIRENFT(tokenId) {
     try {
         const provider = new ethers.providers.JsonRpcProvider(CONSTANTS["1337-RPC_URL"]);
         const contractABI = ABI.CUSTOMNFT;
@@ -112,7 +112,7 @@ export async function autoEXPIRENFT() {
 
         const signer = provider.getSigner();
         const contractWithSigner = contract.connect(signer);
-        await contractWithSigner.autoExpireNFT();
+        await contractWithSigner.autoExpireNFT(tokenId);
 
     } catch (error) {
         console.log(error);
@@ -121,6 +121,13 @@ export async function autoEXPIRENFT() {
 
 
 }
+
+export const hexToDecimal = (hexValue) => {
+
+    const decimalValue = parseInt(hexValue, 16);
+    return decimalValue
+}
+
 export const unSigningAddress = async (addr, sign) => {
     try {
       let message = 'Please sign your public address for authorized API calls'

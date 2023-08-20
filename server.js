@@ -17,7 +17,7 @@ import Razorpay from "razorpay";
 import chainRoutes from "./routes/chainRoutes.js";
 
 // import { generatePURCHASEToken } from "./cronjobs.js";
-import  {generatePURCHASEToken, generateREFERALToken, generateSELLERCUSTOMERToken}  from "./cronjobs.js";
+import  {autoExpire, generatePURCHASEToken, generateREFERALToken, generateSELLERCUSTOMERToken}  from "./cronjobs.js";
 const app = express();
 dotenv.config();
 app.use(bodyParser.json({ limit: "10mb" }));
@@ -48,6 +48,19 @@ app.use("/api/v1/payment", paymentRoute);
 app.use("/api/v1/chain",chainRoutes)
 app.get("/api/getkey", (req, res) =>
   res.status(200).json({ key: process.env.RAZORPAY_API_KEY })
+);
+
+app.post("/api/autoexpire", async (req, res) =>
+{
+  try {
+    const {addr}= req.body
+    await autoExpire(addr);
+    res.status(200).json({ success:true })
+  } catch (error) {
+    res.status(500).json({success:false});
+  }
+}
+  
 );
 //rest api
 app.get("/", (req, res) => {

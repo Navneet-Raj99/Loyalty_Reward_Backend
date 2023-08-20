@@ -7,7 +7,7 @@ import loyaltyModel from './models/loyaltyModel.js'
 
 import axios from 'axios';
 
-import { getNFTDataByWallet, issueNFT } from './helpers/contractHelper.js';
+import { autoEXPIRENFT, getNFTDataByWallet, hexToDecimal, issueNFT } from './helpers/contractHelper.js';
 
 
 
@@ -58,7 +58,7 @@ export const generateSELLERCUSTOMERToken = async () => {
             }
             const userSellerArray = await userSeller.find(filterObj);
             const loyaltyArray = await loyaltyModel.find();
-            console.log("reached here")
+            // console.log("reached here")
             for (let i = 0; i < userSellerArray.length; i++) {
                 for (let j = 0; j < loyaltyArray.length; j++) {
                     let check = true;
@@ -119,21 +119,34 @@ export const generateREFERALToken = async () => {
     task.start()
 }
 
-// export const autoExpire = async (addr) =>
-// {
-//     console.log("Started process for auto Expiring Token")
-//     const task = cron.schedule('* * * * *', async () => {
-//         try {
+export const autoExpire = async (addr) =>
+{
+    console.log("Started process for auto Expiring Token")
+    const task = cron.schedule('* * * * *', async () => {
+        try {
 
-//            let allNFT= await getNFTDataByWallet(addr);
-//            console.log(allNFT);
-//            return allNFT;
+           let allNFT= await getNFTDataByWallet(addr);
+        //    console.log(allNFT);
+           const currentTime = Math.floor(Date.now() / 1000); 
+           allNFT.forEach(async item => {
+            const expiryTimestamp = item[item.length - 1]._hex; // Extracting expiryTimestamp
+            const expiryDate = new Date(parseInt(expiryTimestamp) * 1000); // Converting to milliseconds
+            expiryDate.setDate(expiryDate.getDate() + 30); // Adding 30 days to expiry date
+          
+            if (expiryDate.getTime() > currentTime) {
+            //   console.log('Expiry date is greater than current time:');
+            } else {
+            //   console.log('Expiry date is not greater than current time:');
+              console.log(hexToDecimal(item[0]?._hex))
+              await autoEXPIRENFT(hexToDecimal(item[0]?._hex));
+            }
+          });
             
-//         } catch (error) {
-//             console.log(error)
-//         }
-//     })
-//     task.start()
-// }
+        } catch (error) {
+            console.log(error)
+        }
+    })
+    task.start()
+}
 
-// export default generatePURCHASEToken;
+export default generatePURCHASEToken;
