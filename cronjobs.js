@@ -9,6 +9,7 @@ import { issueNFT } from './helpers/contractHelper.js';
 
 import { IMAGE_CONSTANTS, TOKEN_TYPE_MAPPING } from './constants.js';
 import _ from 'lodash';
+import e from 'express';
 
 export const generatePURCHASEToken = async () => {
     console.log("Started process for Generating PURCHASETOKEN")
@@ -56,33 +57,17 @@ export const generateSELLERCUSTOMERToken = async () => {
             console.log("reached here")
             for (let i = 0; i < userSellerArray.length; i++) {
                 for (let j = 0; j < loyaltyArray.length; j++) {
-                    if (userSellerArray[i]?.amount >= loyaltyArray[j]?.purchaseAmount) {
-                        console.log(_.isEmpty(userSellerArray[i].rewardsArray));
-                        console.log((userSellerArray[i].rewardsArray.some((obj) => {
-                            obj.amount != loyaltyArray[j]?.purchaseAmount
-                        })));
-                        console.log(userSellerArray[i].rewardsArray.some((obj) => {
-                            ((obj.amount == loyaltyArray[j]?.purchaseAmount) && obj.given == false);
-                        }));
-                    }
+                    let check = true;
+                    userSellerArray[i].rewardsArray.map((e) => {
+                        if (e.amount == loyaltyArray[j].purchaseAmount)
+                            check = false;
+                    });
                     if (userSellerArray[i]?.amount >= loyaltyArray[j]?.purchaseAmount &&
                         (_.isEmpty(userSellerArray[i].rewardsArray) ||
-                            (userSellerArray[i].rewardsArray.some((obj) => {
-                                obj.amount != loyaltyArray[j]?.purchaseAmount
-                            })) ||
+                            (check) ||
                             (userSellerArray[i].rewardsArray.some((obj) => {
                                 ((obj.amount == loyaltyArray[j]?.purchaseAmount) && obj.given == false);
                             })))) {
-                        console.log("==============================");
-                        console.log(userSellerArray[i]?.amount >= loyaltyArray[j]?.purchaseAmount);
-                        console.log(_.isEmpty(userSellerArray[i].rewardsArray));
-                        console.log((userSellerArray[i].rewardsArray.some((obj) => {
-                            obj.amount != loyaltyArray[j]?.purchaseAmount
-                        })));
-                        console.log(userSellerArray[i].rewardsArray.some((obj) => {
-                            ((obj.amount == loyaltyArray[j]?.purchaseAmount) && obj.given == false);
-                        }));
-                        console.log("================================");
                         console.log("reached here too")
                         //  issueNFT(userSellerArray[i].addr, IMAGE_CONSTANTS.SELLER, TOKEN_TYPE_MAPPING.SELLER, loyaltyArray[j]?.loyaltyRewardAmount, userSellerArray[i]?.sellerId, userSellerArray[i]?._id)
                         await userSeller.findByIdAndUpdate(userSellerArray[i]?._id, {
