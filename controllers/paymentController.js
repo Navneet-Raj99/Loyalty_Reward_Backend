@@ -69,7 +69,7 @@ export const paymentVerification = async (req, res) => {
       products: cart,
       payment: req.body,
       buyer: req.user._id,
-      nftTokenValue : totalAmountPayable*0.1,
+      nftTokenValue : Math.floor( totalAmountPayable*0.1 ),
       addr: account
     });
     const sellerIdCostMap = {};
@@ -79,7 +79,7 @@ export const paymentVerification = async (req, res) => {
     cart.map((c) => {
       sellerIdCostMap[c.sellerId]+=c.price;
     })
-    const sellerIdCostArray = Object.entries(sellerIdCostMap).map(([id, amount]) => ({sellerId: id, amount}));
+    const sellerIdCostArray = Object.entries(sellerIdCostMap).map(([id, amount]) => ({sellerId: id, amount: Math.floor(amount)}));
     const userSellerPromises = sellerIdCostArray.map((e) => {
       return userSellerModel.findOne({
         userId: req.user._id,
@@ -94,7 +94,7 @@ export const paymentVerification = async (req, res) => {
             userId: req.user._id,
             sellerId: sellerIdCostArray[index].sellerId
           }, {
-            amount: r.amount + sellerIdCostArray[index].amount,
+            amount:  Math.floor(r.amount) + sellerIdCostArray[index].amount,
             addr: account
           })
         } else {
