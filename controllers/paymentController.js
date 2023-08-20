@@ -38,10 +38,9 @@ export const checkout = async (req, res) => {
 export const paymentVerification = async (req, res) => {
   try {
     console.log("payvaavduavdu", req.body);
-  const { razorpay_order_id, razorpay_payment_id, razorpay_signature, cart } =
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, cart, account } =
     req.body;
-
-  console.log(razorpay_order_id, razorpay_payment_id, razorpay_signature);
+    console.log(razorpay_order_id, razorpay_payment_id, razorpay_signature, account);
 
   const body = razorpay_order_id + "|" + razorpay_payment_id;
 
@@ -69,7 +68,8 @@ export const paymentVerification = async (req, res) => {
       products: cart,
       payment: req.body,
       buyer: req.user._id,
-      nftTokenValue : totalAmountPayable*0.1
+      nftTokenValue : totalAmountPayable*0.1,
+      addr: account
     });
     const sellerIdCostMap = {};
     cart.map((c) => {
