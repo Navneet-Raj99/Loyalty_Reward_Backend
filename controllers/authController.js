@@ -6,10 +6,11 @@ import { comparePassword, hashPassword } from "./../helpers/authHelper.js";
 import JWT from "jsonwebtoken";
 import _ from 'lodash'
 import referralCodes from "referral-codes";
+import userReferralModel from "../models/userReferral.js";
 
 export const registerController = async (req, res) => {
   try {
-    const { name, email, password, phone, address, answer, isSeller, imgUrl } = req.body;
+    const { name, email, password, phone, address, answer, isSeller, imgUrl, userRef } = req.body;
     //validations
     if (!name) {
       return res.send({ error: "Name is Required" });
@@ -64,6 +65,17 @@ export const registerController = async (req, res) => {
         phone,
         address,
       }).save();
+    }
+    if(userRef) {
+      const senderUserReferral = await userModel.findOne({
+        refCode: userRef
+      });
+      userReferralModel.create({
+        senderUserId: _.toString(senderUserReferral._id),
+        consumerUserId: _.toString(user._id),
+        referralCode: userRef,
+        awarded: false
+    })
     }
     res.status(200).send({
       success: true,
